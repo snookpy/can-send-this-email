@@ -71,14 +71,24 @@ const checkEmail = async (email) => {
 }
 
 const FindEmail = async (firstName, lastName, domain) => {
+    var begin=Date.now();
     console.time("Time this");
     const emailArr = GetPatternEmails(firstName, lastName, domain)
-    const res = await Promise.all(emailArr.map(m => checkEmail(m)))
-    console.log(res)
+    const raw = await Promise.all(emailArr.map(m => checkEmail(m)))
     console.timeEnd("Time this");
+    var end= Date.now();
+    
+    var timeSpent=(end-begin)+"ms";
+    console.log(timeSpent)
+    canSendEmails = raw.filter(r => r.wellFormed && r.validDomain && r.validMailbox)
 
-    console.log(res.filter(r => r.wellFormed && r.validDomain && r.validMailbox))
-    return res.filter(r => r.wellFormed && r.validDomain && r.validMailbox)
+    // return raw.filter(r => r.wellFormed && r.validDomain && r.validMailbox)
+    return {
+        timeSpent: timeSpent,
+        canSendEmails: raw.filter(r => r.wellFormed && r.validDomain && r.validMailbox),
+        rawEmails: raw
+        
+    }
 }
 
 module.exports = FindEmail
