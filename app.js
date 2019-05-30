@@ -15,9 +15,13 @@ app.use(bodyParser.json());
 
 app.post('/api/checkemail/', async function (req, res) {
     const {firstName, lastName, domain } = req.body
-    console.log(req.body)
-    const result =  await findEmail(firstName, lastName, domain)
-    return res.json(result)
+    if (firstName && lastName && domain){ 
+        console.log(req.body)
+        const result =  await findEmail(firstName, lastName, domain)
+        return res.json(result)
+    } else {
+        return res.json({error: "firstName, lastName, domain  are missing "})
+    }
 })
 
 var server = http.createServer(app);
