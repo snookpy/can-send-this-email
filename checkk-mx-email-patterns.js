@@ -80,7 +80,7 @@ const FindEmail = async (firstName, lastName, domain) => {
     
     var timeSpent=(end-begin)+"ms";
     console.log(timeSpent)
-    canSendEmails = raw.filter(r => r.wellFormed && r.validDomain && r.validMailbox)
+    canSendEmails = raw.filter(r => r.wellFormed === true && r.validDomain === true && r.validMailbox === true)
 
     // return raw.filter(r => r.wellFormed && r.validDomain && r.validMailbox)
     return {
