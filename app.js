@@ -2,6 +2,7 @@ var bodyParser = require('body-parser')
 const express  = require("express");
 var http = require("http");
 const app = express();
+var cors = require('cors');
 
 const findEmail = require("./checkk-mx-email-patterns")
 
@@ -11,7 +12,7 @@ app.use(
     })
 );
 app.use(bodyParser.json());
-
+app.use(cors());
 
 app.post('/api/checkemail/', async function (req, res) {
     const {firstName, lastName, domain } = req.body
