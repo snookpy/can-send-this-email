@@ -4,7 +4,7 @@ var http = require("http");
 const app = express();
 var cors = require('cors');
 
-const findEmail = require("./checkk-mx-email-patterns")
+const {findEmail, isAcceptAllDomain} = require("./checkk-mx-email-patterns")
 
 app.use(
     bodyParser.urlencoded({
@@ -18,6 +18,16 @@ app.post('/api/checkemail/', async function (req, res) {
     const {firstName, lastName, domain } = req.body
     if (firstName && lastName && domain){ 
         console.log(req.body)
+        const isAcceptAll = await isAcceptAllDomain(domain)
+        if(isAcceptAll){
+            return res.json({"canSendEmails": [
+                {
+                    "wellFormed": true,
+                    "validDomain": true,
+                    "validMailbox": true,
+                    "email": "Accept All Domain"
+                }]})
+        }
         const result =  await findEmail(firstName, lastName, domain)
         return res.json(result)
     } else {

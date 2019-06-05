@@ -1,4 +1,4 @@
-const EmailValidator = require('email-deep-validator');
+const EmailValidator = require('./email-deep-validator');
 const patternsEnum = [
     "{fn}",
     "{ln}",
@@ -70,7 +70,7 @@ const checkEmail = async (email) => {
     }
 }
 
-const FindEmail = async (firstName, lastName, domain) => {
+const findEmail = async (firstName, lastName, domain) => {
     var begin=Date.now();
     console.time("Time this");
     const emailArr = GetPatternEmails(firstName, lastName, domain)
@@ -91,5 +91,17 @@ const FindEmail = async (firstName, lastName, domain) => {
     }
 }
 
-module.exports = FindEmail
+const isAcceptAllDomain = async (domain) => {
+    const result = await checkEmail(`amcwdc6969@${domain}`)
+    if (result.wellFormed === true && result.validDomain === true && result.validMailbox === true)
+        return true
+    else 
+        return false
+
+}
+
+module.exports = {
+    findEmail,
+    isAcceptAllDomain
+}
  
