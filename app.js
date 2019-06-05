@@ -25,7 +25,7 @@ app.post('/api/checkemail/', async function (req, res) {
                     "wellFormed": true,
                     "validDomain": true,
                     "validMailbox": true,
-                    "email": "Accept All Domain"
+                    "email": "Accept All Domain: " + `${firstName}@${domain}`
                 }]})
         }
         const result =  await findEmail(firstName, lastName, domain)
