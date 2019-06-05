@@ -1,5 +1,5 @@
 const dns = require('dns'),
-  net = require('net'),
+  net = require('net')
 
 
 const ninvoke = (module, fn, ...args) => new Promise((resolve, reject) => {
