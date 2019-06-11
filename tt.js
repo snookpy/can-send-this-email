@@ -1,12 +1,12 @@
 var verifier = require('email-verify');
-var infoCodes = verifier.infoCodes;
+var infoCodes = verifier.verifyCodes;
 
-verifier.verify( 'anemail@domain.com', function( err, info ){
+verifier.verify( 'sssfg@saudiencevalue.com', function( err, info ){
   if( err ) console.log(err);
   else{
     console.log( "Success (T/F): " + info.success );
-    console.log( "Info: " + info.info );
-
+    console.log( "Info: ", info );
+    console.log(verifier)
     //Info object returns a code which representing a state of validation:
 
     //Connected to SMTP server and finished email verification
