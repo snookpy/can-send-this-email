@@ -3,6 +3,7 @@ const express  = require("express");
 var http = require("http");
 const app = express();
 var cors = require('cors');
+var rp = require('request-promise');
 
 const {findEmail, isAcceptAllDomain} = require("./checkk-mx-email-patterns")
 
@@ -13,6 +14,37 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(cors());
+
+app.post('/api/google/', async function (req, res) {
+    console.log(req.body.token)
+    var options = {
+        method: 'POST',
+        uri: 'https://www.google.com/recaptcha/api/siteverify',
+        form: {
+            secret: '6LdDgqgUAAAAAGux-4epYBGe26HTxKgAEcaY5E3Q',
+            response: req.body.token
+        },
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+        },
+        json: true // Automatically stringifies the body to JSON
+    };
+    
+    rp(options)
+        .then(function (parsedBody) {
+            // POST succeeded...
+            console.log(parsedBody)
+            return res.send(parsedBody)
+        })
+        .catch(function (err) {
+            // POST failed...
+            console.log(err)
+            return res.status(500).send({err: "err"})
+        });
+    
+
+
+})
 
 app.post('/api/checkemail/', async function (req, res) {
     const {firstName, lastName, domain } = req.body
