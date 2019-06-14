@@ -29,7 +29,8 @@ app.post('/api/checkemail/', async function (req, res) {
                     "email": "Accept All Domain: " + `${firstName}@${domain}`
                 }]})
         }
-        const result =  await findEmail(firstName, lastName, domain)
+        else
+        {const result =  await findEmail(firstName, lastName, domain)}
         return res.json(result)
     } else {
         return res.json({error: "firstName, lastName, domain  are missing "})
