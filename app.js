@@ -5,7 +5,7 @@ const app = express();
 var cors = require('cors');
 var rp = require('request-promise');
 
-const {findEmail, isAcceptAllDomain} = require("./checkk-mx-email-patterns")
+const {findEmail, isAcceptAllDomain, checkEmail} = require("./checkk-mx-email-patterns")
 
 app.use(
     bodyParser.urlencoded({
@@ -14,6 +14,10 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(cors());
+
+app.get('/api/checkemail/:email', async function (req,res) {
+   return  await checkEmail({email: req.params.email, domain: 'one-email'})
+})
 
 app.post('/api/checkemail/', async function (req, res) {
     const {firstName, lastName, domain } = req.body

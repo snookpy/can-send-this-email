@@ -92,7 +92,7 @@ const findEmail = async (firstName, lastName, domain) => {
 }
 
 const isAcceptAllDomain = async (domain) => {
-    const result = await checkEmail(`amcwdc6969@${domain}`)
+    const result = await checkEmail({email: `amcwdc6969@${domain}`, pattern: 'accept-all'})
     if (result.wellFormed === true && result.validDomain === true && result.validMailbox === true)
         return true
     else 
@@ -102,6 +102,7 @@ const isAcceptAllDomain = async (domain) => {
 
 module.exports = {
     findEmail,
-    isAcceptAllDomain
+    isAcceptAllDomain,
+    checkEmail
 }
  
