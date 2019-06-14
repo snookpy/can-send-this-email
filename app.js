@@ -16,7 +16,9 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/api/checkemail/:email', async function (req,res) {
-   return  await checkEmail({email: req.params.email, domain: 'one-email'})
+   const result =  await checkEmail({email: req.params.email, domain: 'one-email'})
+
+   return res.json(result)
 })
 
 app.post('/api/checkemail/', async function (req, res) {
