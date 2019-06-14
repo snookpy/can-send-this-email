@@ -17,7 +17,7 @@ app.use(cors());
 
 app.post('/api/checkemail/', async function (req, res) {
     const {firstName, lastName, domain } = req.body
-    if (firstName && lastName && domain){ 
+    if (firstName && lastName && domain){
         console.log(req.body)
         const isAcceptAll = await isAcceptAllDomain(domain)
         if(isAcceptAll){
