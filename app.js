@@ -30,8 +30,11 @@ app.post('/api/checkemail/', async function (req, res) {
                 }]})
         }
         else
-        {const result =  await findEmail(firstName, lastName, domain)}
-        return res.json(result)
+        {
+            const result =  await findEmail(firstName, lastName, domain)
+            return res.json(result)
+        }
+        
     } else {
         return res.json({error: "firstName, lastName, domain  are missing "})
     }
