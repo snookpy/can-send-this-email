@@ -15,6 +15,11 @@ app.use(
 app.use(bodyParser.json());
 app.use(cors());
 
+app.get('/api/checkacceptall/:domain', async function (req, res) {
+    const isAcceptAll = await isAcceptAllDomain(req.params.domain)
+    return res.json({isAcceptAll: isAcceptAll});
+})
+
 app.get('/api/checkemail/:email', async function (req,res) {
    const result =  await checkEmail({email: req.params.email, domain: 'one-email'})
 
