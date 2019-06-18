@@ -30,21 +30,21 @@ app.post('/api/checkemail/', async function (req, res) {
     const {firstName, lastName, domain } = req.body
     if (firstName && lastName && domain){
         console.log(req.body)
-        const isAcceptAll = await isAcceptAllDomain(domain)
-        if(isAcceptAll){
-            return res.json({"canSendEmails": [
-                {
-                    "wellFormed": true,
-                    "validDomain": true,
-                    "validMailbox": true,
-                    "email": "Accept All Domain: " + `${firstName}@${domain}`
-                }]})
-        }
-        else
-        {
+        // const isAcceptAll = await isAcceptAllDomain(domain)
+        // if(isAcceptAll){
+        //     return res.json({"canSendEmails": [
+        //         {
+        //             "wellFormed": true,
+        //             "validDomain": true,
+        //             "validMailbox": true,
+        //             "email": "Accept All Domain: " + `${firstName}@${domain}`
+        //         }]})
+        // }
+        // else
+        // {
             const result =  await findEmail(firstName, lastName, domain)
             return res.json(result)
-        }
+        // }
         
     } else {
         return res.json({error: "firstName, lastName, domain  are missing "})
