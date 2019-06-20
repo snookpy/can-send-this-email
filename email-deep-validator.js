@@ -118,6 +118,31 @@ class EmailValidator {
     }
 
     return new Promise(resolve => {
+
+      const options = {
+        proxy: {
+          host: '159.203.75.200', // ipv4 or ipv6 or hostname
+          port: 1080,
+          type: 5 // Proxy version (4 or 5)
+        },
+       
+        command: 'connect', // SOCKS command (createConnection factory function only supports the connect command)
+       
+        destination: {
+          host: mxRecord, // github.com (hostname lookups are supported with SOCKS v4a and 5)
+          port: 25
+        }
+      };
+
+      try {
+        const info = await SocksClient.createConnection(options);
+       
+        console.log(info.socket);
+      } catch (err) {
+        // Handle errors
+      }
+      
+
       const socket = net.connect(25, mxRecord);
       let resTimeout;
 
