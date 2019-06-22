@@ -1,4 +1,4 @@
-const SocksClient = require('socks').SocksClient;
+(async function(){const SocksClient = require('socks').SocksClient;
 
 const options = {
   proxy: {
@@ -22,4 +22,4 @@ try {
   // <Socket ...>  (this is a raw net.Socket that is established to the destination host through the given proxy server)
 } catch (err) {
   // Handle errors
-}
+}})()
