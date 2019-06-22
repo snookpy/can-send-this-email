@@ -1,41 +1,25 @@
+const SocksClient = require('socks').SocksClient;
+
 const options = {
-    destination: {
-      host: 'mycostech-com.mail.protection.outlook.com', // host names are supported with SOCKS v4a and SOCKS v5.
-      port: 25
-    },
-    command: 'connect', // Only the connect command is supported when chaining proxies.
-    proxies: [ // The chain order is the order in the proxies array, meaning the last proxy will establish a connection to the destination.
-      {
-        host: '159.203.75.235', // ipv4, ipv6, or hostname
-        port: 1081,
-        type: 5
-      },
-      {
-        host: '104.131.124.203', // ipv4, ipv6, or hostname
-        port: 1081,
-        type: 5
-      }
-    ]
+  proxy: {
+    host: '172.31.46.194', // ipv4 or ipv6 or hostname
+    port: 4444,
+    type: 5 // Proxy version (4 or 5)
+  },
+ 
+  command: 'connect', // SOCKS command (createConnection factory function only supports the connect command)
+ 
+  destination: {
+    host: 'mycostech-com.mail.protection.outlook.com', // github.com (hostname lookups are supported with SOCKS v4a and 5)
+    port: 25
   }
-   
-  // Async/Await
-  try {
-    const info = await SocksClient.createConnectionChain(options);
-   
-    console.log(info.socket);
-   
-    console.log(info.socket.remoteAddress) // The remote address of the returned socket is the first proxy in the chain.
-    // 159.203.75.235
-    const messages = [
-        `HELO mycostech`,
-        `MAIL FROM: <example.com>`,
-        `RCPT TO: <$eiei@eiei>`
-      ];
-    info.socket.write(messages[0] + '\r\n');
-    info.socket.on('data', (data) => {
-      console.log(data.toString());
-    });
-  } catch (err) {
-    // Handle errors
-    console.log(err)
-  }
+};
+
+try {
+  const info = await SocksClient.createConnection(options);
+ 
+  console.log(info.socket);
+  // <Socket ...>  (this is a raw net.Socket that is established to the destination host through the given proxy server)
+} catch (err) {
+  // Handle errors
+}
