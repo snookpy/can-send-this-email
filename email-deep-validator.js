@@ -55,7 +55,7 @@ class EmailValidator {
     }, options);
   }
 
-  async verify(address, proxyIp) {
+  async verify(address, proxyIp, proxyPort) {
     const result = { wellFormed: false, validDomain: null, validMailbox: null };
     let local;
     let domain;
@@ -87,7 +87,7 @@ class EmailValidator {
 
     if (this.options.verifyMailbox) {
       result.validMailbox = await EmailValidator.verifyMailbox(
-        local, domain, mxRecords, this.options.timeout, proxyIp
+        local, domain, mxRecords, this.options.timeout, proxyIp, proxyPort
       );
     }
 
@@ -112,7 +112,7 @@ class EmailValidator {
     return records.map(record => record.exchange);
   }
 
-  static async verifyMailbox(local, domain, [mxRecord], timeout, proxyId) {
+  static async verifyMailbox(local, domain, [mxRecord], timeout, proxyId, proxyPort) {
     if (!mxRecord || /yahoo/.test(mxRecord)) {
       console.log('Cannot verify due to missing or unsupported MX record', mxRecord);
       return null;
@@ -123,7 +123,7 @@ class EmailValidator {
       const options = {
         proxy: {
           host: proxyId, // ipv4 or ipv6 or hostname
-          port: 4444,
+          port: proxyPort,
           type: 5 // Proxy version (4 or 5)
         },
        
@@ -150,43 +150,43 @@ class EmailValidator {
           clearTimeout(resTimeout);
           resolve(result);
           ret.resolved = true;
+        }
 
-          const messages = [
-            `HELO ${domain}`,
-            `MAIL FROM: <${local}@${domain}>`,
-            `RCPT TO: <${local}@${domain}>`
-          ];
-    
-          info.socket.on('data', data => {
-            data = data.toString();
-    
-            console.log('Mailbox: got data', data);
-    
-            if (isInvalidMailboxError(data)) return ret(false);
-            if (InvalidButContinues(data)) return ret(true);
-            if (!data.includes(220) && !data.includes(250)) return ret(null);
-    
-            if (isMultilineGreet(data)) return;
-    
-            if (messages.length > 0) {
-              const message = messages.shift();
-              console.log('Mailbox: writing message', message);
-              return info.socket.write(message + '\r\n');
-            }
-    
-            ret(true);
-          });
-    
-          info.socket.on('error', err => {
-            console.log('Mailbox: error in socket', err);
-            ret(null);
-          });
-    
-          resTimeout = setTimeout(() => {
-            console.log(`Mailbox: timed out (${timeout} ms)`);
-            ret(null);
-          }, timeout);
-        };
+        const messages = [
+          `HELO ${domain}`,
+          `MAIL FROM: <${local}@${domain}>`,
+          `RCPT TO: <${local}@${domain}>`
+        ];
+  
+        info.socket.on('data', data => {
+          data = data.toString();
+  
+          console.log('Mailbox: got data', data);
+  
+          if (isInvalidMailboxError(data)) return ret(false);
+          if (InvalidButContinues(data)) return ret(true);
+          if (!data.includes(220) && !data.includes(250)) return ret(null);
+  
+          if (isMultilineGreet(data)) return;
+  
+          if (messages.length > 0) {
+            const message = messages.shift();
+            console.log('Mailbox: writing message', message);
+            return info.socket.write(message + '\r\n');
+          }
+  
+          ret(true);
+        });
+  
+        info.socket.on('error', err => {
+          console.log('Mailbox: error in socket', err);
+          ret(null);
+        });
+  
+        resTimeout = setTimeout(() => {
+          console.log(`Mailbox: timed out (${timeout} ms)`);
+          ret(null);
+        }, timeout);
       } catch (err) {
         console.log("error: ", err);
       }
