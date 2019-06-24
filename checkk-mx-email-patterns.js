@@ -58,12 +58,10 @@ const GetPatternEmails = (firstName, lastName, domain) => {
     
 }
 
-const checkEmail = async ({email, pattern}) => {
+const checkEmail = async ({email, pattern, proxyIp}) => {
     try {
         const emailValidator = new EmailValidator();
-        const res = await emailValidator.verify(email, {
-            timeout: 10000
-        });
+        const res = await emailValidator.verify(email, proxyIp);
         return {...res, email: email, pattern};
     } catch(err) {
         return err;
