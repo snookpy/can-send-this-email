@@ -52,6 +52,6 @@ app.post('/api/checkemail/', async function (req, res) {
 })
 
 var server = http.createServer(app);
-server.listen(3333, function() {
+server.listen(process.env.PORT || 3333, function() {
     console.log("Express server listening on port 3333");
 });
